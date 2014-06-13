@@ -48,15 +48,15 @@ config = {
     // When running Ghost in the wild, use the production environment
     // Configure your URL and mail settings here
     production: {
-        url: 'http://my-ghost-blog.com',
+        url: 'http://dongidea.herokuapp.com',
         mail: {},
         database: {
 			client: 'postgres',
 			connection: {
-				host: 'ec2-54-225-103-9.compute-1.amazonaws.com',
-				user: 'yaahaqihakexkx',
-				password: 'T75E0jTQI00lSmbSoAXFGOjUyt',
-				database: 'd72fjknf186n4',
+				host: process.env.POSTGRES_HOST,
+				user: process.env.POSTGRES_USER,
+				password: process.env.POSTGRES_PASSWORD,
+				database: process.env.POSTGRES_DATABASE,
 				port: '5432'
 			},
             debug: false
