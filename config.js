@@ -48,8 +48,10 @@ config = {
     // When running Ghost in the wild, use the production environment
     // Configure your URL and mail settings here
     production: {
-        url: 'http://my-ghost-blog.com',
-        mail: {},
+        url: 'http://dongidea.herokuapp.com',
+        mail: {
+			fromaddress: 'eastward2107@gmail.com'
+		},
         database: {
 			client: 'postgres',
 			connection: {
