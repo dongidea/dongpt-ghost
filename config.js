@@ -50,7 +50,14 @@ config = {
     production: {
         url: 'http://dongidea.herokuapp.com',
         mail: {
-			fromaddress: 'eastward2107@gmail.com'
+			transport: 'SMTP',
+			options: {
+				service: 'Mailgun',
+				auth: {
+					user: 'postmaster@sandbox2478d12b210042f0a1cef8797395691f.mailgun.org',
+					pass: '8a-ejac9t4z9'
+				}
+			}
 		},
         database: {
 			client: 'postgres',
