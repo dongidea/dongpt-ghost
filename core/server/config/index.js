@@ -41,29 +41,11 @@ function ConfigManager(config) {
 
 // Are we using sockets? Custom socket or the default?
 ConfigManager.prototype.getSocket = function () {
-    var socketConfig,
-        values = {
-            path: path.join(this._config.paths.contentPath, process.env.NODE_ENV + '.socket'),
-            permissions: '660'
-        };
-
     if (this._config.server.hasOwnProperty('socket')) {
-        socketConfig = this._config.server.socket;
-
-        if (_.isString(socketConfig)) {
-            values.path = socketConfig;
-
-            return values;
-        }
-
-        if (_.isObject(socketConfig)) {
-            values.path = socketConfig.path || values.path;
-            values.permissions = socketConfig.permissions || values.permissions;
-
-            return values;
-        }
+        return _.isString(this._config.server.socket) ?
+            this._config.server.socket :
+            path.join(this._config.paths.contentPath, process.env.NODE_ENV + '.socket');
     }
-
     return false;
 };
 
@@ -82,25 +64,6 @@ ConfigManager.prototype.init = function (rawConfig) {
         return self._config;
     });
 };
-
-function configureDriver(client) {
-    var pg;
-
-    if (client === 'pg' || client === 'postgres' || client === 'postgresql') {
-        try {
-            pg = require('pg');
-        } catch (e) {
-            pg = require('pg.js');
-        }
-
-        // By default PostgreSQL returns data as strings along with an OID that identifies
-        // its type.  We're setting the parser to convert OID 20 (int8) into a javascript
-        // integer.
-        pg.types.setTypeParser(20, function (val) {
-            return val === null ? null : parseInt(val, 10);
-        });
-    }
-}
 
 /**
  * Allows you to set the config object.
@@ -142,7 +105,6 @@ ConfigManager.prototype.set = function (config) {
         (crypto.createHash('md5').update(packageInfo.version + Date.now()).digest('hex')).substring(0, 10);
 
     if (!knexInstance && this._config.database && this._config.database.client) {
-        configureDriver(this._config.database.client);
         knexInstance = knex(this._config.database);
     }
 

@@ -203,8 +203,7 @@ function checkSSL(req, res, next) {
 // Handles requests to robots.txt and favicon.ico (and caches them)
 function serveSharedFile(file, type, maxAge) {
     var content,
-        filePath = path.join(config.paths.corePath, 'shared', file),
-        re = /(\{\{blog-url\}\})/g;
+        filePath = path.join(config.paths.corePath, 'shared', file);
 
     return function serveSharedFile(req, res, next) {
         if (req.url === '/' + file) {
@@ -216,9 +215,7 @@ function serveSharedFile(file, type, maxAge) {
                     if (err) {
                         return next(err);
                     }
-                    if (type === 'text/xsl' || type === 'text/plain') {
-                        buf = buf.toString().replace(re, config.url.replace(/\/$/, ''));
-                    }
+                    buf = buf.toString().replace('{{blog-url}}', config.url.replace(/\/$/, ''));
                     content = {
                         headers: {
                             'Content-Type': type,
@@ -299,11 +296,13 @@ setupMiddleware = function (blogAppInstance, adminApp) {
     // site map
     sitemapHandler(blogApp);
 
-    // Add in all trailing slashes
+    // Add in all trailing slashes, properly include the subdir path
+    // in the redirect.
     blogApp.use(slashes(true, {
         headers: {
             'Cache-Control': 'public, max-age=' + utils.ONE_YEAR_S
-        }
+        },
+        base: config.paths.subdir
     }));
     blogApp.use(uncapitalise);
 

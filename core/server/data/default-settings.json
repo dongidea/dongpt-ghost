@@ -67,9 +67,6 @@
         },
         "ghost_foot": {
             "defaultValue" : ""
-        },
-        "labs": {
-            "defaultValue": "{}"
         }
     },
     "theme": {

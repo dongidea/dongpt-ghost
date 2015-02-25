@@ -124,19 +124,19 @@ GhostServer.prototype.start = function (externalApp) {
 
     // ## Start Ghost App
     return new Promise(function (resolve) {
-        var socketConfig = config.getSocket();
-
-        if (socketConfig) {
+        if (config.getSocket()) {
             // Make sure the socket is gone before trying to create another
             try {
-                fs.unlinkSync(socketConfig.path);
+                fs.unlinkSync(config.getSocket());
             } catch (e) {
                 // We can ignore this.
             }
 
-            self.httpServer = rootApp.listen(socketConfig.path);
+            self.httpServer = rootApp.listen(
+                config.getSocket()
+            );
 
-            fs.chmod(socketConfig.path, socketConfig.permissions);
+            fs.chmod(config.getSocket(), '0660');
         } else {
             self.httpServer = rootApp.listen(
                 config.server.port,

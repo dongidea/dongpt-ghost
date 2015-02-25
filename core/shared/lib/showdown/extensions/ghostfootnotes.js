@@ -32,7 +32,7 @@ function replaceInlineFootnotes(text) {
     });
 }
 
-function replaceEndFootnotes(text, converter) {
+function replaceEndFootnotes(text) {
     // Expanded footnotes at the end e.g. "[^1]: cool stuff"
     var endRegex = /\[\^(\d|n)\]: ([\s\S]*?)$(?!    )/gim,
         m = text.match(endRegex),
@@ -45,12 +45,12 @@ function replaceEndFootnotes(text, converter) {
         }
 
         content = content.replace(/\n    /g, '<br>');
-        content = converter.makeHtml(content);
-        content = content.replace(/<\/p>$/, '');
+
         var s = '<li class="footnote" id="fn:' + n + '">' +
-                  content + ' <a href="#fnref:' + n +
+                  '<p>' + content + ' <a href="#fnref:' + n +
                     '" title="return to article">↩</a>' +
-                '</p></li>';
+                  '</p>' +
+                '</li>';
 
         if (i === 0) {
             s = '<div class="footnotes"><ol>' + s;
@@ -66,7 +66,7 @@ function replaceEndFootnotes(text, converter) {
 }
 
 (function () {
-    var footnotes = function (converter) {
+    var footnotes = function () {
         return [
             {
                 type: 'lang',
@@ -86,7 +86,7 @@ function replaceEndFootnotes(text, converter) {
                     }, 'm');
 
                     text = replaceInlineFootnotes(text);
-                    text = replaceEndFootnotes(text, converter);
+                    text = replaceEndFootnotes(text);
 
                     // replace extractions
                     text = text.replace(/\{gfm-js-extract-pre-([0-9]+)\}/gm, function (x, y) {
